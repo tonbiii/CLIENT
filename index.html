@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EA DASHBOARD</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+  <header>
+    <h1>ACCESS YOUR EA CONTROLPANEL</h1>
+  </header>
+
+    <div class="login-container">
+        <div class="form-container">
+
+            <!-- Sign In Form -->
+            <form id="signInForm" action="login.php" method="POST">
+                <h2>Sign In</h2>
+                <div class="infield">
+                    <input type="text" placeholder="Username" name="username" id="signin-username" required/>
+                    <label></label>
+                </div>
+                <div class="infield password-field">
+                    <input type="password" placeholder="Password" name="password" id="signin-password" required/>
+                    <i class="fa fa-eye" id="toggleSigninPassword"></i>
+                    <label></label>
+                    <div class="error-message" id="signin-error">Invalid login credentials</div>
+                </div>
+                <a href="forgot.html" class="forgot">Forgot your password?</a>
+                <button type="submit">Sign In</button>
+                <p>Don't have an account? <a href="#" id="showSignup">Sign Up</a></p>
+            </form>
+
+            <!-- Sign Up Form -->
+            <form id="signUpForm" class="hidden" action="register.php" method="POST">
+                <h2>Create Account</h2>
+                <div class="infield">
+                    <input type="text" placeholder="Username" name="username" id="signup-username" required/>
+                    <label></label>
+                    <div class="error-message" id="signup-username-error">Username already in use</div>
+                </div>
+                <div class="infield">
+                    <input type="text" placeholder="MT4 Account ID" name="mt4AccountId" id="signup-account-id" required/>
+                    <label></label>
+                </div>
+                <div class="infield password-field">
+                    <input type="password" placeholder="MT4 Account Password" name="mt4AccountPassword" id="signup-account-password" required/>
+                    <i class="fa fa-eye" id="toggleSignupAccountPassword"></i>
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <select name="mt4Server" id="signup-server" required>
+                        <option value="" disabled selected>Select MT4 Broker Server</option>
+                        <option value="OctaFX-Real">OctaFX-Real</option>
+                        <option value="OctaFX-Real2">OctaFX-Real2</option>
+                        <option value="OctaFX-Real3">OctaFX-Real3</option>
+                        <option value="OctaFX-Real4">OctaFX-Real4</option>
+                        <option value="OctaFX-Real5">OctaFX-Real5</option>
+                        <option value="Ava-Real 3">Ava-Real 3</option>
+                    </select>
+                    <label></label>
+                </div>
+                <div class="infield password-field">
+                    <input type="password" placeholder="Password" name="password" id="signup-password" required/>
+                    <i class="fa fa-eye" id="toggleSignupPassword"></i>
+                    <label></label>
+                    <div class="error-message" id="signup-password-error">Password must be at least 6 characters long and include at least one letter and one number.</div>
+                </div>
+                <div class="infield">
+                    <input type="text" placeholder="Enter Registration Code" name="registrationCode" id="signup-registration-code" required />
+                    <label></label>
+                    <div class="error-message" id="signup-code-error">Invalid or already used code</div>
+                </div>
+                <button type="submit">Sign Up</button>
+                <span class="loading-icon" id="loadingIcon"><i class="fa fa-spinner"></i></span>
+                <p>Already have an account? <a href="#" id="showLogin">Sign In</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const signUpForm = document.getElementById('signUpForm');
+        const signInForm = document.getElementById('signInForm');
+        const showSignup = document.getElementById('showSignup');
+        const showLogin = document.getElementById('showLogin');
+
+        // Show Sign Up Form, Hide Sign In Form
+        showSignup.addEventListener('click', function(event) {
+            event.preventDefault();
+            signInForm.classList.add('hidden');
+            signUpForm.classList.remove('hidden');
+        });
+
+        // Show Sign In Form, Hide Sign Up Form
+        showLogin.addEventListener('click', function(event) {
+            event.preventDefault();
+            signUpForm.classList.add('hidden');
+            signInForm.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
