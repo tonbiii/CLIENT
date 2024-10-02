@@ -364,7 +364,7 @@ select:focus {
 .logout-button {
     background-color: #000000;
     color: var(--text-color);
-    border: none;
+    border: 3px solid rgba(97, 224, 236, 0.2);
     padding: 10px 20px;
     border-radius: 4px;
     font-size: 0.9rem;
