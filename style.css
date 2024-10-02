@@ -31,8 +31,8 @@ h1 {
 }
 
 .login-container {
-    width: 297.5px; /* 15% reduction from 350px */
-    height: auto; /* Keep the height adaptive based on content */
+    width: 230px; /* 15% reduction from 350px */
+    height: absolute; /* Keep the height adaptive based on content */
     background: transparent;
     border: 3px solid rgba(97, 224, 236, 0.2);
     backdrop-filter: blur(9px); /* Optional, remove this if not needed */
@@ -53,10 +53,10 @@ h1 {
 .password-field i {
     position: absolute;
     top: 50%;
-    right: 10px;
+    right: 20px;
     transform: translateY(-50%);
     cursor: pointer;
-    color: #000;
+    color: #fff;
 }
 
 .input-error {
@@ -105,8 +105,8 @@ h1 {
 
 /* Main select box styling */
 select {
-    width: 100%;
-    height: 45px; /* Reduced slightly to fit smaller container */
+    width: 95%;
+    height: 32px; /* Reduced slightly to fit smaller container */
     margin: 10px 0;
     background-color: black;
     border: 2px solid rgba(97, 224, 236, 0.2);
@@ -120,8 +120,16 @@ select {
     background-size: 20px;
     cursor: pointer;
     border-radius: 60px;
-    padding: 5px 10px;
-    color: #bbc6d2 ;
+    padding: 2px 5px;
+}
+
+select {
+    color: #bbc6d2; /* Color of the text */
+    font-size: 16px; /* Font size */
+    font-family: 'Manrope', sans-serif; /* Font family */
+    text-align: left; /* Align text inside the input (center, right, or left) */
+    letter-spacing: 0px; /* Adds spacing between the letters */
+    line-height: 1.5; /* Adjust vertical spacing */
 }
 
 .login-container h2 {
@@ -139,7 +147,7 @@ form {
 input{
     width: 89%;
     margin: 5px 0; /* Adjust spacing to fit the smaller container */
-    padding: 13px ; /* Adjust padding slightly */
+    padding: 4px ; /* Adjust padding slightly */
     background: transparent;
     border: 2px solid rgba(97, 224, 236, 0.2);
     border-radius: 60px;
@@ -152,7 +160,7 @@ input {
     font-size: 16px; /* Font size */
     font-family: 'Manrope', sans-serif; /* Font family */
     text-align: left; /* Align text inside the input (center, right, or left) */
-    letter-spacing: 1px; /* Adds spacing between the letters */
+    letter-spacing: 0px; /* Adds spacing between the letters */
     line-height: 1.5; /* Adjust vertical spacing */
 }
 
