@@ -48,7 +48,7 @@ h1 {
     font-size: 1.5rem; /* Slightly smaller font size */
     text-transform: uppercase;
     line-height: 1.2;
-    color: #6caac9;
+    color: S#ffffff;
 }
 
 .info-section {
@@ -129,7 +129,7 @@ input[type="text"] {
     font-size: 0.9rem; /* Slightly smaller font size */
     display: block;
     margin: 0 auto; /* Center align input boxes */
-    color: #000000;
+    color: #ffffff;
 }
 
 input[type="number"]:focus,
