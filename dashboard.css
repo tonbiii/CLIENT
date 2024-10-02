@@ -1,0 +1,382 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-bg: #000000;
+    --secondary-bg: #fcfcfc;
+    --text-color: #fff;
+    --input-bg: #ffffff;
+    --hover-bg: #46a9ab;
+    --hover-text: #000000;
+}
+
+body {
+    font-family: "Manrope", sans-serif;
+    background: url('img.svg');
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    overflow: auto; /* Allow scrollbars */
+}
+
+header {
+    width: 100%;
+    background: var(--primary-bg);
+    text-align: center;
+    padding: 15px 0;
+    position: fixed;
+    z-index: 100;
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2);
+    font-family: 'SUSE', sans-serif;
+    color: var(--text-color);
+    top: 0;
+    left: 0;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.3rem; /* Slightly smaller font size */
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+.info-section {
+    margin-top: 200px; /* Adjusted to be below the header */
+    width: 80%; /* Adjusted to match container width */
+    background: #46a9ab;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    text-align: center;
+    position: static; /* Changed from sticky to static */
+} 
+
+.info-section h2 {
+    margin-bottom: 40px;
+    font-size: 1.25rem;
+    color: var(--primary-bg);
+}
+
+.info-section p {
+    font-size: 0.9rem;
+    color: var(--primary-bg);
+    margin-top: 15px;
+}
+
+.info-section strong {
+    line-height: 30px;
+    font-weight: bold;
+}
+
+.info-section span {
+    color: #000000;
+}
+
+.container {
+    margin-top: 30px; /* Space between info-section and container */
+    width: 80%; /* Reduced width by 30% (from 70% to 50%) */
+    background: #46a9ab;
+    border-radius: 10px; /* Slightly smaller border radius */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow for visibility */
+    padding: 20px;
+    text-align: center; /* Center content inside the container */
+}
+
+.inputs-section {
+    margin-bottom: 20px;
+}
+
+.inputs-section h2 {
+    margin-bottom: 20px;
+    font-size: 1.25rem; /* Slightly smaller font size */
+    color: #000000;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: var(--primary-bg);
+}
+
+input[type="number"],
+input[type="text"] {
+    width: 60%; /* Reduced width by 30% */
+    max-width: 300px; /* Ensure inputs don’t get too wide */
+    padding: 8px; /* Reduced padding */
+    border: 1px solid var(--primary-bg);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    font-size: 0.9rem; /* Slightly smaller font size */
+    display: block;
+    margin: 0 auto; /* Center align input boxes */
+}
+
+input[type="number"]:focus,
+input[type="text"]:focus {
+    border-color: var(--secondary-bg);
+    outline: none;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.update-button {
+    background-color: #000000;
+    border: none;
+    color: var(--text-color);
+    padding: 8px 16px; /* Reduced padding */
+    border-radius: 4px;
+    font-size: 0.9rem; /* Slightly smaller font size */
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.update-button:hover {
+    background-color: var(--hover-bg);
+    color: var(--hover-text);
+}
+
+.active-settings {
+    background: var(--input-bg);
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.active-settings h2 {
+    margin-bottom: 15px;
+    font-size: 1.25rem; /* Slightly smaller font size */
+    color: var(--primary-bg);
+}
+
+.settings-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px;
+
+}
+
+.setting-item {
+    margin-bottom: 35px;
+    font-size: 1.3rem; /* Slightly smaller font size */
+    color: var(--primary-bg);
+}
+
+.setting-item strong {
+    font-weight: 600;
+}
+
+.setting-item span {
+    color: var(--secondary-bg);
+}
+
+select {
+    width: 60%;
+    max-width: 300px;
+    padding: 8px;
+    border: 1px solid var(--primary-bg);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    font-size: 0.9rem;
+    display: block;
+    margin: 0 auto;
+    color: var(--primary-bg);
+}
+
+select:focus {
+    border-color: var(--secondary-bg);
+    outline: none;
+}
+
+/* Existing styles... */
+
+.dropdown-container {
+    position: relative;
+    width: 60%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+#instrumentSearch {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--primary-bg);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+
+#instrumentSelect {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--primary-bg);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    font-size: 0.9rem;
+    color: var(--primary-bg);
+    box-sizing: border-box;
+}
+
+#instrumentSelect option {
+    font-size: 0.9rem;
+}
+
+/* Optional styling for the dropdown search input */
+#instrumentSearch::placeholder {
+    color: #030303;
+}
+/* Align dropdown results to the left */
+.dropdown-results {
+    text-align: left; /* Aligns text to the left */
+}
+
+/* Increase the distance between the dropdown search and lot size input */
+.input-group.dropdown-container {
+    margin-bottom: 20px; /* Increased margin for more space */
+}
+
+/* Modal styling */
+/* Modal background styling */
+.modal-background {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(11, 11, 11, 0.5);
+}
+
+/* Modal box styling */
+.modal-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(5, 5, 5);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(253, 252, 252, 0.2);
+    width: 400px;
+    text-align: center;
+}
+
+ /* Modal background styling */
+ .modal-background {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+
+
+/* Modal buttons */
+.modal-buttons {
+    margin-top: 20px;
+}
+
+.modal-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0 10px;
+    background-color: #141E30; /* Updated color */
+    color: white;
+}
+
+/* Both confirm and cancel buttons will now use the same color */
+.modal-buttons .confirm-button {
+    background-color: #141E30;
+    color: white;
+}
+
+.modal-buttons .cancel-button {
+    background-color: #141E30;
+    color: white;
+}
+
+/* Remove button styling */
+.remove-button {
+    background-color: #141E30;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 0.9rem;
+}
+
+.remove-button:hover {
+    background-color: #141E30;
+}
+
+.update-info-button {
+    background-color: var(--primary-bg);
+    color: var(--text-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: block;
+    margin: 20px auto;
+    transform: scale(0.8);
+}
+
+.update-info-button:hover {
+    background-color: var(--hover-bg);
+    color: var(--hover-text);
+}
+
+
+.logout-button {
+    background-color: #000000;
+    color: var(--text-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: block;
+    margin: 20px auto;
+}
+
+.logout-button:hover {
+    background-color: var(--hover-bg);
+    color: var(--hover-text);
+}

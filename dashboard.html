@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EA Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- CSS stylesheet -->
+    <link rel="stylesheet" href="dashboard.css">
+    <style>
+        /* Dropdown styling */
+        select {
+            width: 60%;
+            max-width: 300px;
+            padding: 8px;
+            border: 1px solid var(--primary-bg);
+            border-radius: 4px;
+            background-color: var(--input-bg);
+            font-size: 0.9rem;
+            display: block;
+            margin: 0 auto;
+            color: var(--primary-bg);
+            position: relative;
+        }
+
+        /* Search input inside dropdown */
+        .dropdown-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-search {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--primary-bg);
+            border-radius: 4px;
+            background-color: var(--input-bg);
+            font-size: 0.9rem;
+            color: var(--primary-bg);
+            box-sizing: border-box;
+            margin-bottom: 5px;
+        }
+
+        .dropdown-search:focus {
+            border-color: var(--secondary-bg);
+            outline: none;
+        }
+
+        .dropdown-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--input-bg);
+            border: 1px solid var(--primary-bg);
+            border-radius: 4px;
+            z-index: 10;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .dropdown-results.active {
+            display: block;
+        }
+
+        .dropdown-results div {
+            padding: 8px;
+            cursor: pointer;
+            color: var(--primary-bg);
+        }
+
+        .dropdown-results div:hover {
+            background-color: var(--hover-bg);
+            color: var(--hover-text);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ACCESS YOUR EA CONTROLPANEL</h1>
+    </header>
+
+    <div class="info-section">
+        <h3>Account Information</h3>
+        <p><strong>Username:</strong> <span id="username">Loading...</span></p>
+        <p><strong>MT4 Account ID:</strong> <span id="mt4-account-id">Loading...</span></p>
+        <p><strong>MT4 Broker Server:</strong> <span id="mt4-broker-server">Loading...</span></p>
+        
+    </div>
+
+    <div class="container" id="container">
+        <div class="inputs-section">
+            <h2>Update Settings</h2>
+            
+            <!-- Instrument Group Selection -->
+            <div class="input-group">
+                <label for="instrumentGroup">Instrument Group</label>
+                <select id="instrumentGroup" name="instrumentGroup" onchange="populateInstruments()">
+                    <option value="">--Select Group--</option>
+                    <option value="Forex">Forex</option>
+                    <option value="Metals">Metals</option>
+                </select>
+            </div>
+            
+            <!-- Instrument Selection with search functionality -->
+            <div class="input-group dropdown-container">
+                <label for="instrumentSelect">Instrument</label>
+                <input type="text" id="instrumentSearch" class="dropdown-search" placeholder="Search Instrument..." onkeyup="filterInstruments()">
+                <div id="instrumentResults" class="dropdown-results"></div>
+            </div>
+            
+            <div class="input-group">
+                <label for="timeFrame">Time Frame</label>
+                <select id="timeFrame" name="timeFrame">
+                    <option value="M1">M1 (1 Minute)</option>
+                    <option value="M5">M5 (5 Minutes)</option>
+                    <option value="M15">M15 (15 Minutes)</option>
+                    <option value="M30">M30 (30 Minutes)</option>
+                    <option value="H1">H1 (1 Hour)</option>
+                    <option value="H4">H4 (4 Hours)</option>
+                    <option value="D1">D1 (1 Day)</option>
+                    <option value="W1">W1 (1 Week)</option>
+                    <option value="MN">MN (1 Month)</option>
+                </select>
+            </div>
+            <button class="update-button" onclick="openConfirmationModal()">Add Chart</button>
+        </div>
+
+        <div class="active-settings">
+            <h2>Active Charts</h2>
+            <ul class="settings-list" id="settingsList">
+                <!-- Dynamic chart settings will be added here -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- Log Out Button -->
+    <button onclick="window.location.href='index.html'" class="logout-button">Log Out</button>
+
+    <!-- Confirmation Modal -->
+    <div class="modal-background" id="confirmationModal">
+        <div class="modal-box">
+            <h3>Confirm Settings</h3>
+            <p>Are you sure you want to add this Chart?</p>
+            <div class="modal-buttons">
+                <button class="confirm-button" onclick="confirmAddChart()">Confirm</button>
+                <button class="cancel-button" onclick="closeConfirmationModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript code -->
+    <script>
+        // Function to load user data and populate account information
+        function loadUserData() {
+            fetch('getUserData.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('username').textContent = data.username;
+                        document.getElementById('mt4-account-id').textContent = data.mt4_account_id;
+                        document.getElementById('mt4-broker-server').textContent = data.mt4_server;
+                        // Call function to load saved charts
+                        loadSavedCharts(data.username);
+                    } else {
+                        alert('Error fetching user data: ' + data.message);
+                        window.location.href = 'index.html'; // Redirect to login page if there's an error
+                    }
+                })
+                .catch(error => console.error('Error fetching user data:', error));
+        }
+    
+        // Function to load saved charts from the database
+        function loadSavedCharts(username) {
+            fetch('getCharts.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        data.charts.forEach(chart => {
+                            addChartToList(chart.instrument, chart.timeframe, chart.chart_number);
+                        });
+                    } else {
+                        console.error('Error loading charts:', data.message);
+                    }
+                })
+                .catch(error => console.error('Error fetching charts:', error));
+        }
+    
+        // Function to add a chart to the list
+        function addChartToList(instrument, timeFrame, chartNumber) {
+            // Create a new list item with chart settings
+            const listItem = document.createElement('li');
+            listItem.classList.add('settings-item');
+            listItem.innerHTML = `
+                <strong>Chart ${chartNumber}</strong>: Instrument: ${instrument} - Time Frame: ${timeFrame}
+                <button class="remove-button" onclick="removeChart(this, ${chartNumber})">Remove</button>
+            `;
+    
+            // Add list item to the list
+            document.getElementById('settingsList').appendChild(listItem);
+        }
+    
+        // Load user data when page is loaded
+        document.addEventListener('DOMContentLoaded', loadUserData);
+    
+        // Function to populate the instruments dropdown based on selected group
+        function populateInstruments() {
+            const groupSelect = document.getElementById('instrumentGroup').value;
+            const instrumentResults = document.getElementById('instrumentResults');
+    
+            // Clear previous results
+            instrumentResults.innerHTML = '';
+    
+            // Fetch instruments from PHP script based on selected group
+            if (groupSelect) {
+                fetch(`getInstruments.php?group=${groupSelect}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(instrument => {
+                            const div = document.createElement('div');
+                            div.textContent = instrument;
+                            div.onclick = () => {
+                                document.getElementById('instrumentSearch').value = instrument;
+                                instrumentResults.classList.remove('active');
+                            };
+                            instrumentResults.appendChild(div);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching instruments:', error));
+            }
+        }
+    
+        // Function to filter instruments based on search input
+        function filterInstruments() {
+            const searchValue = document.getElementById('instrumentSearch').value.toLowerCase();
+            const results = document.getElementById('instrumentResults').children;
+            Array.from(results).forEach(result => {
+                const text = result.textContent.toLowerCase();
+                result.style.display = text.includes(searchValue) ? 'block' : 'none';
+            });
+            document.getElementById('instrumentResults').classList.add('active');
+        }
+    
+        // Open the modal only if all fields are valid
+        function openConfirmationModal() {
+            // Clear previous errors
+            clearErrors();
+    
+            // Get input values
+            const instrumentGroup = document.getElementById('instrumentGroup').value;
+            const instrument = document.getElementById('instrumentSearch').value;
+            const timeFrame = document.getElementById('timeFrame').value;
+    
+            // Validate inputs
+            if (!instrumentGroup || !instrument || !timeFrame) {
+                alert("Please fill in all fields.");
+                return;
+            }
+    
+            // All fields are valid, show the modal
+            document.getElementById('confirmationModal').style.display = 'block';
+        }
+    
+        // Function to confirm adding the chart and add it to the list
+        function confirmAddChart() {
+            const instrument = document.getElementById('instrumentSearch').value;
+            const timeFrame = document.getElementById('timeFrame').value;
+    
+            // Get the current username from the session
+            const username = document.getElementById('username').textContent;
+    
+            // Send data to the server to save the chart
+            saveChartToDatabase(username, instrument, timeFrame)
+                .then(chartNumber => {
+                    // Create a new list item with chart settings only if the save was successful
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('settings-item');
+                    listItem.innerHTML = `
+                        <strong>Chart ${chartNumber}</strong>: Instrument: ${instrument} - Time Frame: ${timeFrame}
+                        <button class="remove-button" onclick="removeChart(this, ${chartNumber})">Remove</button>
+                    `;
+    
+                    // Add list item to the list
+                    document.getElementById('settingsList').appendChild(listItem);
+    
+                    // Update index numbers for each chart
+                    updateChartIndex();
+                })
+                .catch(error => {
+                    console.error('Error saving chart:', error);
+                    alert('Failed to add chart: ' + error.message);
+                });
+    
+            // Close the modal
+            closeConfirmationModal();
+        }
+    
+        // Function to save the chart settings to the database and return the chart number
+        function saveChartToDatabase(username, instrument, timeFrame) {
+            const data = {
+                username: username,
+                instrument: instrument,
+                timeFrame: timeFrame
+                // chartNumber is now handled by the database
+            };
+    
+            // Send the data using fetch
+            return fetch('saveChart.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    return result.chart_number; // Return the chart number received from the server
+                } else {
+                    throw new Error(result.message); // Throw an error if saving failed
+                }
+            });
+        }
+    
+        // Function to update index numbers for charts
+        function updateChartIndex() {
+            const chartItems = document.querySelectorAll('#settingsList .settings-item');
+            chartItems.forEach((item, index) => {
+                item.querySelector('strong').textContent = `Chart ${index + 1}`;
+            });
+        }
+    
+        // Function to remove a chart from the list
+        function removeChart(button, chartNumber) {
+            const listItem = button.parentElement; // Get the parent list item
+    
+            // Get the username from the session
+            const username = document.getElementById('username').textContent;
+    
+            // Send request to remove the chart from the database
+            fetch('removeChart.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username: username, chartNumber: chartNumber })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    // If the removal was successful, remove the chart from the list
+                    listItem.remove();
+                    console.log('Chart removed successfully');
+                } else {
+                    alert('Error removing chart: ' + result.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    
+        // Function to close the confirmation modal
+        function closeConfirmationModal() {
+            document.getElementById('confirmationModal').style.display = 'none';
+        }
+    
+        // Function to clear input errors
+        function clearErrors() {
+            const inputs = document.querySelectorAll('.input-group input, .input-group select');
+            inputs.forEach(input => {
+                input.classList.remove('error');
+            });
+        }
+    </script>
+    
+        
+    

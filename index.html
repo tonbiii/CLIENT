@@ -16,6 +16,10 @@
     <h1>ACCESS YOUR EA CONTROLPANEL</h1>
   </header>
 
+  <div id="notification"></div>
+  <div id="signin-notification"></div>
+
+
     <div class="login-container">
         <div class="form-container">
 
@@ -103,6 +107,112 @@
             signUpForm.classList.add('hidden');
             signInForm.classList.remove('hidden');
         });
+
+        function restrictInput(event) {
+            const validChars = /^[a-z0-9_]*$/;
+            const input = event.target;
+            if (!validChars.test(input.value)) {
+                input.value = input.value.replace(/[^a-z0-9_]/g, '');
+                if (input.id === 'signup-username') {
+                    document.getElementById('signup-username-error').style.display = 'block';
+                    input.classList.add('input-error');
+                }
+            } else {
+                if (input.id === 'signup-username') {
+                    document.getElementById('signup-username-error').style.display = 'none';
+                    input.classList.remove('input-error');
+                }
+            }
+        }
+
+        function showNotification(message, isSignIn = false) {
+            const notification = isSignIn ? document.getElementById('signin-notification') : document.getElementById('notification');
+            notification.innerText = message;
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        async function handleFormSubmission(event) {
+            event.preventDefault();
+            const form = event.target;
+            const isSignUp = form.id === 'signUpForm';
+            const loadingIcon = document.getElementById('loadingIcon');
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            loadingIcon.style.display = 'inline';
+
+            const formData = new FormData(form);
+            const controller = new AbortController();
+
+            // Adjust timeout as needed (12 minutes = 720,000 ms)
+            const timeout = setTimeout(() => controller.abort(), 720000); 
+
+            if (isSignUp) {
+                showNotification('Authentication process ongoing, it might take up to 5 minutes...');
+            }
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    signal: controller.signal,
+                    headers: {
+                        'Cache-Control': 'no-cache'
+                    }
+                });
+
+                clearTimeout(timeout);
+
+                const jsonResponse = await response.json();
+
+                if (jsonResponse.success) {
+                    if (isSignUp) {
+                        showNotification('Registration successful!');
+                        form.reset(); // Clear form
+                    } else {
+                        showNotification('Login successful!', true);
+                        setTimeout(() => window.location.href = 'dashboard.html', 3000);
+                    }
+                } else {
+                    if (isSignUp) {
+                        showNotification(jsonResponse.message);
+                    } else {
+                        document.getElementById('signin-error').style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    showNotification('Request timed out. Please try again.');
+                } else {
+                    showNotification('An error occurred. Please try again.');
+                }
+            } finally {
+                submitButton.disabled = false;
+                loadingIcon.style.display = 'none';
+            }
+        }
+
+        document.getElementById('signUpForm').addEventListener('submit', handleFormSubmission);
+        document.getElementById('signInForm').addEventListener('submit', handleFormSubmission);
+
+        function togglePasswordVisibility(toggleId, inputId) {
+            const toggleIcon = document.getElementById(toggleId);
+            const inputField = document.getElementById(inputId);
+
+            toggleIcon.addEventListener('click', () => {
+                const type = inputField.getAttribute('type') === 'password' ? 'text' : 'password';
+                inputField.setAttribute('type', type);
+                toggleIcon.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        togglePasswordVisibility('toggleSignupPassword', 'signup-password');
+        togglePasswordVisibility('toggleSignupAccountPassword', 'signup-account-password');
+        togglePasswordVisibility('toggleSigninPassword', 'signin-password');
+    
     </script>
 </body>
 </html>
